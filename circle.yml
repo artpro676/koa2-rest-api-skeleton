@@ -1,0 +1,25 @@
+machine:
+  services:
+    - docker
+general:
+  branches:
+    only:
+      - development
+      - qa
+      - master
+dependencies:
+  override:
+    - curl -L -o ~/bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5rc1/jq-linux-x86_64-static && chmod +x ~/bin/jq
+    - chmod +x scripts/set-app-build-version.sh && scripts/set-app-build-version.sh
+    - docker info
+    - docker build --rm=false -t beam-server:$CIRCLE_BRANCH .
+
+test:
+  override:
+    - echo "no tests are specified"
+
+deployment:
+  development:
+    branch: [development, qa, master]
+    commands:
+      - chmod +x scripts/deploy.sh && scripts/deploy.sh
