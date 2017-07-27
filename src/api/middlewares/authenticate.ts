@@ -1,7 +1,7 @@
 'use strict';
 
 import Utils from '../services/Utils';
-import AuthService from '../services/AuthService';
+import TokenService from '../services/TokenService';
 import AppError from '../services/AppError';
 import models from '../../models';
 import logger from "../../config/logger";
@@ -34,7 +34,7 @@ const authenticate = async function (ctx, next) {
 
     let decoded;
     try {
-        decoded = await AuthService.verifyToken(token);
+        decoded = await TokenService.verifyJWTToken(token);
     } catch (err) {
         throw new AppError(401, err.message);
     }

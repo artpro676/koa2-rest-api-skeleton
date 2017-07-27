@@ -4,7 +4,7 @@ import config from '../../config/app';
 import logger from '../../config/logger';
 import models from '../../models';
 import AppError from '../services/AppError';
-import ActionService from '../services/ActionService';
+import ActionHookService from '../services/ActionHookService';
 import * as Ajv from 'ajv';
 import * as _ from 'lodash';
 
@@ -41,8 +41,7 @@ export default (modelName, preProcessors = []) => {
 
         let entity = await model.create(data);
 
-        const stateName = modelName == 'User' ? 'account' : _.toLower(modelName);
-        ctx.state[stateName] = entity;
+        ctx.state[_.toLower(modelName)] = entity;
 
         ctx.status = 201;
         ctx.body = {data: entity};

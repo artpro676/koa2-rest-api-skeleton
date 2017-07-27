@@ -18,10 +18,10 @@ import AppError from "./AppError";
  * @param mailTemplate
  */
 const sendEmailTemplateUserFollow = async function (ctx, mailTemplate) {
-    const notificationDisableToken = await TokenService.createNotificationDisableToken(ctx.state.account);
-    await EmailService.sendTemplate(mailTemplate, [ctx.state.account.email], {
-        name: ctx.state.account.firstName || ctx.state.account.username,
-        followerName: ctx.state.user.firstName || ctx.state.user.username,
+    const notificationDisableToken = await TokenService.createNotificationDisableToken(ctx.state.user);
+    await EmailService.sendTemplate(mailTemplate, [ctx.state.user.email], {
+        name: ctx.state.user.firstName || ctx.state.user.username,
+        followerName: ctx.state.account.firstName || ctx.state.account.username,
         link: Utils.getNotificationDisableLink(notificationDisableToken)
     });
 };
@@ -36,7 +36,7 @@ const sendEmailTemplateBeamFollow = async function (ctx, beamOwner) {
     const notificationDisableToken = await TokenService.createNotificationDisableToken(beamOwner);
     await EmailService.sendTemplate('followed_beam', [beamOwner.email], {
         name: beamOwner.firstName || beamOwner.username,
-        followerName: ctx.state.user.firstName || ctx.state.user.username,
+        followerName: ctx.state.account.firstName || ctx.state.account.username,
         beamDescription: ctx.state.beam.title || ctx.state.beam.description,
         link: Utils.getNotificationDisableLink(notificationDisableToken)
     });

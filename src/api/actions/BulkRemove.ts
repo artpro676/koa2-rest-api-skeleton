@@ -4,11 +4,11 @@ import config from '../../config/app';
 import logger from '../../config/logger';
 import models from '../../models';
 import AppError from '../services/AppError';
-import ActionService from '../services/ActionService';
+import ActionHookService from '../services/ActionHookService';
 import QueryFilterService from '../services/QueryFilterService';
 import * as _ from 'lodash';
 
-export default (modelName, preProcessors = [ActionService.checkOwnerAccess()],) => {
+export default (modelName, preProcessors = [ActionHookService.checkOwnerAccess()],) => {
 
     const model = models[modelName];
 
@@ -19,7 +19,7 @@ export default (modelName, preProcessors = [ActionService.checkOwnerAccess()],) 
         let idList = ctx.request.body.id;
 
         if (_.size(idList) == 0) { throw new AppError(400, 'List of IDs should not be empty') }
-        if (modelName === 'User' && _.includes(idList, ctx.state.user.id)) { throw new AppError(400, 'You can\'t remove yourself!') }
+        if (modelName === 'User' && _.includes(idList, ctx.state.account.id)) { throw new AppError(400, 'You can\'t remove yourself!') }
 
         let instances = await model.findAll({where: {id: {$in: idList}}});
 

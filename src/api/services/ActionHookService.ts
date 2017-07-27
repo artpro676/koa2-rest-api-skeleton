@@ -10,7 +10,7 @@ import {throws} from "assert";
 const checkOwnerAccess = (ownerFieldName = 'userId') => {
     return function (ctx, instance) {
 
-        const user = ctx.state.user;
+        const user = ctx.state.account;
 
         if (RoleService.roleIsAdmin(user.role)) { return instance }
 
@@ -28,7 +28,7 @@ const checkOwnerAccess = (ownerFieldName = 'userId') => {
 const setOwner = (ownerFieldName = 'userId') => {
     return async function (ctx, instance) {
 
-        const user = ctx.state.user;
+        const user = ctx.state.account;
 
         if (RoleService.roleIsAdmin(user.role) && !_.isEmpty(instance[ownerFieldName])) { return true }
 
@@ -42,7 +42,7 @@ const setDefaultStream = () => {
 
     return async function (ctx, instance) {
 
-        const user = ctx.state.user;
+        const user = ctx.state.account;
 
         //if (RoleService.roleIsAdmin(user.role)) { return true }
 
@@ -58,7 +58,7 @@ const setDefaultStream = () => {
     }
 };
 
-const checkPaidBeamsToPost = (userKeyId = 'state.user.id') => {
+const checkPaidBeamsToPost = (userKeyId = 'state.account.id') => {
 
     return async function (ctx, instance) {
 

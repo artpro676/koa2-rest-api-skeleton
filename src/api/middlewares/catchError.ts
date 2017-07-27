@@ -57,10 +57,11 @@ const catchError = async function (ctx, next) {
                     EmailService.sendTemplate('alert', config.email.developerEmails, {
                         title: _.isObject(err.message) ? JSON.stringify(err.message) : err.message ,
                         message: `Method: ${ctx.request.method} 
-<br/> Route: ${ctx.request.url} 
-<br/> Headers: ${JSON.stringify(ctx.request.header)}
-<br/> Body: ${JSON.stringify(ctx.request.body)}
-<br/> Stack: ${_.isObject(err.stack) ? JSON.stringify(err.stack) : err.stack}`
+                        <br/> Route: ${ctx.request.url} 
+                        <br/> Headers: ${JSON.stringify(ctx.request.header)}
+                        <br/> Body: ${JSON.stringify(ctx.request.body)}
+                        <br/> Stack: ${_.isObject(err.stack) ? JSON.stringify(err.stack) : err.stack}
+                        `
                     });
                 } catch (e) {
                     logger.error(e);

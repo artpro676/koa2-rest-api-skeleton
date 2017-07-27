@@ -6,7 +6,7 @@ import models from '../../models';
 import AppError from '../services/AppError';
 import QueryFilterService from '../services/QueryFilterService';
 import Utils from '../services/Utils';
-import ActionService from '../services/ActionService';
+import ActionHookService from '../services/ActionHookService';
 import * as _ from 'lodash';
 
 export default (modelName, options:any = {preProcessors: [], paramName: 'id', showDeleted: false}) => {

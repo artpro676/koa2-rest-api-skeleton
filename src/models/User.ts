@@ -420,7 +420,7 @@ export default function (sequelize, DataTypes) {
             allBeamsCount: [sequelize.literal(`((SELECT COUNT("b"."id")::INT FROM "beam" as "b" WHERE "b"."userId" = "${alias}"."id") + (SELECT COUNT("sb"."beamId")::INT FROM "saved_content" as "sb" WHERE "sb"."userId" = "${alias}"."id" AND "sb"."beamId" IS NOT NULL))`), 'allBeamsCount'],
             isFollowed: (ctx) => { // shows true or false
                 return [sequelize.literal(`(SELECT (COUNT("f"."followerId") > 0) FROM "follow" as "f" 
-                WHERE "f"."followingId" = "${alias}"."id" AND "f"."followerId" = ${_.get(ctx, 'state.user.id', 0)})`), 'isFollowed']
+                WHERE "f"."followingId" = "${alias}"."id" AND "f"."followerId" = ${_.get(ctx, 'state.account.id', 0)})`), 'isFollowed']
             },
             blockedUserCount: [sequelize.literal(`(SELECT COUNT("b"."userId")::INT FROM "user_black_list" as "b" WHERE "b"."userId" = "${alias}"."id")`), 'blockedUserCount'],
             blockedBeamCount: [sequelize.literal(`(SELECT COUNT("b"."beamId")::INT FROM "beam_black_list" as "b" WHERE "b"."userId" = "${alias}"."id")`), 'blockedBeamCount'],

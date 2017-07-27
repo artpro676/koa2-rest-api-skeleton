@@ -18,12 +18,12 @@ import * as _ from 'lodash';
  */
 const getUserList = async function (ctx) {
 
-    const action = ctx.state.user.isAdmin()
+    const action = ctx.state.account.isAdmin()
         ? GetList('User')
         : GetList('User', {scopes: [
-        {method: 'public', key: 'state.user.id'},
-        {method: 'skipUser', key: 'state.user.id'},
-        {method: 'skipBlocked', key: 'state.user.id'}
+        {method: 'public', key: 'state.account.id'},
+        {method: 'skipUser', key: 'state.account.id'},
+        {method: 'skipBlocked', key: 'state.account.id'}
     ]});
 
     return action(ctx);
@@ -43,7 +43,7 @@ const setStatus = async function (ctx) {
         throw new AppError(400, 'Status should be one of : ' + _.chain(models.User.statuses).values().join(' or ').value());
     }
 
-    if (_.includes(idList, ctx.state.user.id)) {throw new AppError(400, 'You can`t change status of your profile')}
+    if (_.includes(idList, ctx.state.account.id)) {throw new AppError(400, 'You can`t change status of your profile')}
 
     let result = await models.User.update({status}, {where: {id: {$in: idList}}});
     ctx.body = {data: result};
@@ -54,7 +54,7 @@ const setStatus = async function (ctx) {
  */
 const processPublisherRequest = async function (ctx) {
 
-    const user = ctx.state.account;
+    const user = ctx.state.user;
 
     if (user.role != roles.PUBLISHER_PENDING) {throw new AppError(400, "User doesn't have role 'pending publisher'")}
 
@@ -86,19 +86,19 @@ const processPublisherRequest = async function (ctx) {
  */
 const addToBlackList = async function (ctx) {
 
-    if (ctx.state.user.id == ctx.state.account.id) { throw new AppError(400, 'You cannot block yourself') }
+    if (ctx.state.account.id == ctx.state.user.id) { throw new AppError(400, 'You cannot block yourself') }
 
     const description = _.toString(ctx.request.body.description);
     const isFlagged = !!ctx.request.body.isFlagged;
 
     const data = {
-        userId: ctx.state.user.id,
-        accusedUserId: ctx.state.account.id,
+        userId: ctx.state.account.id,
+        accusedUserId: ctx.state.user.id,
         // isFlagged
     };
 
-    const id = ctx.state.account.id;
-    const userId = ctx.state.user.id;
+    const id = ctx.state.user.id;
+    const userId = ctx.state.account.id;
 
     const [result, isCreated] = await models.UserBlackList.findOrCreate({
         where: data,
@@ -121,7 +121,7 @@ const addToBlackList = async function (ctx) {
 
         if (isFlagged) {
             await EmailService.sendTemplate('user_block', config.email.supportEmails, {
-                message: `User ${ctx.state.user.email} blocked user ${ctx.state.account.email}`
+                message: `User ${ctx.state.account.email} blocked user ${ctx.state.user.email}`
             });
         }
     }
@@ -135,8 +135,8 @@ const removeFromBlackList = async function (ctx) {
 
     const result = await models.UserBlackList.destroy({
         where: {
-            userId: ctx.state.user.id,
-            accusedUserId: ctx.state.account.id,
+            userId: ctx.state.account.id,
+            accusedUserId: ctx.state.user.id,
         }
     });
 
@@ -149,7 +149,7 @@ const removeFromBlackList = async function (ctx) {
 const setPermanentFollowing = function(value) {
     return async function (ctx) {
 
-        const user = ctx.state.user;
+        const user = ctx.state.account;
         user.isPermanentFollowing = value;
         user.save();
 
@@ -171,7 +171,7 @@ const deleteUser = async function(ctx) {
         });
 
         await EmailService.sendTemplate('alert', config.email.supportEmails, {
-            title: `${ctx.state.user.fullname} has been removed`,
+            title: `${ctx.state.account.fullname} has been removed`,
             message: ctx.request.body.description
         });
     }

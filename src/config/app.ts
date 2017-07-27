@@ -33,7 +33,7 @@ const config = {
     saltFactor: 10,
     pageLimit: 10,
     jwt: {
-        secret: process.env.JWT_SECRET || "h9fr3hf93r9uhn3-f9r7fgh-97gdfsd",
+        secret: process.env.JWT_SECRET || "gjrf90hg08-4rtug4-tg4-tyw4tvgwfdghfg-q233q0",
         expiresIn: process.env.JWT_EXPIRES_IN || 3600,
         issuer: 'Beam'
     },
@@ -75,12 +75,12 @@ const config = {
     },
     email :{
         live: _.includes(['development', 'qa', 'master', 'production'], process.env.STAGE),
-        from: process.env.EMAIL_FROM || 'noreply@beamauthentic.com',
-        supportEmails:  process.env.EMAILS_SUPPORT ? _.split(process.env.EMAILS_SUPPORT) : ['support@beamauthentic.com'],
-        developerEmails:  process.env.EMAILS_DEVELOPER ? _.split(process.env.EMAILS_DEVELOPER) : ['Artur.Kononenko@pdt.com']
+        from: process.env.EMAIL_FROM || 'noreply@domain.com',
+        supportEmails:  process.env.EMAILS_SUPPORT ? _.split(process.env.EMAILS_SUPPORT) : ['support@domain.com'],
+        developerEmails:  process.env.EMAILS_DEVELOPER ? _.split(process.env.EMAILS_DEVELOPER) : ['artur.kononenko@vakoms.com.ua']
     },
     assets: {
-        bannedBeamImageUrl: 'https://beam-asset-dev.s3.amazonaws.com/common/picture-banned'
+        // bannedBeamImageUrl: 'https://asset-dev.s3.amazonaws.com/common/picture-banned'
     }
 };
 

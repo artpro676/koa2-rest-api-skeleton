@@ -11,12 +11,6 @@ const s3 = new AWS.S3({
     // signatureCache: true
 });
 
-// key links to folders on S3 bucket
-const types = {
-    BEAM: config.s3.folders.beam,
-    USER: config.s3.folders.user
-};
-
 const ACLs = {
     PUBLIC: 'private',
     PUBLIC_READ: 'public-read',
@@ -24,7 +18,7 @@ const ACLs = {
     AUTHENTICATED_READ: 'authenticated-read',
 };
 
-const createKey = (folder, userId, pictureName = "image") => {
+const createKey = (folder, userId, pictureName = "newfile") => {
     return `${folder}/${userId}/${pictureName}`
 };
 
@@ -34,7 +28,7 @@ const convertUrlToObject = (url) => {
 };
 
 
-const createUploadUrl = function (folder, id, pictureName = "image") {
+const createUploadUrl = function (folder, id, filename = "newfile") {
     const url = s3.getSignedUrl('putObject', {
         Bucket: config.s3.bucket,
         Key: createKey(folder, id, pictureName),
@@ -44,7 +38,7 @@ const createUploadUrl = function (folder, id, pictureName = "image") {
     return _.set(convertUrlToObject(url), 'name', pictureName);
 };
 
-const createDownloadUrl = function (folder, id, pictureName = "image") {
+const createDownloadUrl = function (folder, id, filename = "newfile") {
     if (/^http/.test(pictureName)) {return convertUrlToObject(pictureName + '?')}
 
     const url = s3.getSignedUrl('getObject', {
@@ -56,7 +50,7 @@ const createDownloadUrl = function (folder, id, pictureName = "image") {
     return convertUrlToObject(url)
 };
 
-const getHeadObject = async function (folder, id, pictureName = "image") {
+const getHeadObject = async function (folder, id, filename = "newfile") {
     return new Bluebird(function (resolve, reject) {
         s3.headObject({Bucket: config.s3.bucket, Key: createKey(folder, id, pictureName)}, function (err, data) {
             if (err) { return reject(err) }
@@ -67,7 +61,6 @@ const getHeadObject = async function (folder, id, pictureName = "image") {
 
 
 export default {
-    types,
     createUploadUrl,
     createDownloadUrl,
     getHeadObject

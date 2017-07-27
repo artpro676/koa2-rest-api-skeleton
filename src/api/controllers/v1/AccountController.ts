@@ -20,20 +20,25 @@ const ajv = Ajv({allErrors: true});
 
 /**
  * Get users profile data
- * get /account
+ * get /me
  * @param ctx
  */
 const getProfile = function (ctx) {
     const action = GetOne('User');
-    ctx.params.id = ctx.state.user.id;
+    ctx.params.id = ctx.state.account.id;
     return action(ctx);
 };
 
 /**
- * Set user's profile data
- * put /account
+ * Create presign url to upload image to S3
+ * post /account/picture/upload
  * @param ctx
  */
+const createUploadUrl = function (ctx) {
+    const name = ctx.request.body.name;
+    ctx.body = {data: ctx.state.account.createUploadUrl(name)};
+};
+
 const updateProfile = async function (ctx) {
 
     const user = ctx.state.user;
@@ -67,46 +72,8 @@ const updateProfile = async function (ctx) {
     ctx.body = {data: updatedUser[0]};
 };
 
-/**
- * Create presign url to upload image to S3
- * post /account/picture/upload
- * @param ctx
- */
-const createUploadUrl = function (ctx) {
-    const name = ctx.request.body.name;
-    ctx.body = {data: ctx.state.user.createUploadUrl(name)};
-};
-
-
-/**
- * post /account/destroy
- */
-const deleteUser = async function(ctx) {
-
-    const user = ctx.state.user;
-
-    if(_.get(ctx, 'request.body.description')){
-        await models.User.update({
-            deleteDescription: ctx.request.body.description
-        }, {
-            where: {id: user.id}
-        });
-
-        await EmailService.sendTemplate('alert', config.email.supportEmails, {
-            title: `${user.fullname} has been removed`,
-            message: ctx.request.body.description
-        });
-    }
-
-    const result = await user.destroy();
-
-
-    ctx.body = {data: result}
-};
-
 export default {
     getProfile,
-    updateProfile,
     createUploadUrl,
-    deleteUser
+    updateProfile
 };

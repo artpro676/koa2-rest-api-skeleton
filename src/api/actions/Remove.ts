@@ -4,10 +4,10 @@ import config from '../../config/app';
 import logger from '../../config/logger';
 import models from '../../models';
 import AppError from '../services/AppError';
-import ActionService from '../services/ActionService';
+import ActionHookService from '../services/ActionHookService';
 import * as _ from 'lodash';
 
-export default (modelName, preProcessors = [ActionService.checkOwnerAccess()], paramName = 'id') => {
+export default (modelName, preProcessors = [ActionHookService.checkOwnerAccess()], paramName = 'id') => {
 
     const model = models[modelName];
 
@@ -17,7 +17,7 @@ export default (modelName, preProcessors = [ActionService.checkOwnerAccess()], p
 
         const where = _.set({}, paramName, ctx.params[paramName]);
 
-        // if (modelName === 'User' && ctx.params[paramName] === ctx.state.user.id) {throw new AppError(400, 'You can\'t remove yourself!')}
+        if (modelName === 'User' && ctx.params[paramName] === ctx.state.user.id) {throw new AppError(400, 'You can\'t remove yourself!')}
 
         // check entity
         let entityRow = await model.findOne({where});

@@ -4,7 +4,7 @@ import config from '../../config/app';
 import logger from '../../config/logger';
 import models from '../../models';
 import AppError from '../services/AppError';
-import ActionService from '../services/ActionService';
+import ActionHookService from '../services/ActionHookService';
 import * as Ajv from 'ajv';
 import * as _ from 'lodash';
 
@@ -12,7 +12,7 @@ export default (modelName, options:any = {}) => {
 
     let {preProcessors, paramName, showDeleted} = options;
 
-    if(_.isUndefined(preProcessors)){ preProcessors = [ActionService.checkOwnerAccess()] }
+    if(_.isUndefined(preProcessors)){ preProcessors = [ActionHookService.checkOwnerAccess()] }
     if(!paramName){ paramName = 'id' }
     if(_.isUndefined(showDeleted)){ showDeleted = false }
 

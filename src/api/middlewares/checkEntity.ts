@@ -11,11 +11,7 @@ const checkEntity = (entity, options:any = {}) => async function (ctx, next) {
     if(!param) { param = 'id' }
     if(!postVerificators) { postVerificators = [] }
     if(_.isUndefined(showDeleted)) {
-        if(_.get(ctx, 'state.user') && ctx.state.user.isAdmin()){
-            showDeleted = true;
-        } else {
-            showDeleted = false;
-        }
+            showDeleted = (_.get(ctx, 'state.account') && ctx.state.account.isAdmin());
     }
 
     let modelName = entity;
@@ -54,8 +50,7 @@ const checkEntity = (entity, options:any = {}) => async function (ctx, next) {
         })
     }
 
-    const entityName = (entity === 'User') ? 'account' : _.camelCase(entity);
-    ctx.state[entityName] = entityRow;
+    ctx.state[_.camelCase(entity)] = entityRow;
 
     return next();
 };
