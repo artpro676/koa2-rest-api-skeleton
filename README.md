@@ -1,4 +1,4 @@
-# :package: Beam API & backend
+# :package: Koa 2 REST API skeleton
 
 Koa2, Typescript, PostgresDB, sequelize, OpenAPI specification
 
@@ -48,7 +48,7 @@ Ensure you're running the latest versions:
 
 To run sequelize commands localy, export correct variable DATABASE_URL
 
-`export DATABASE_URL=postgres://postgres:5461@localhost:5432/beam`
+`export DATABASE_URL=postgres://postgres:5461@localhost:5432/postgres`
 
 Create an empty seed:
 
@@ -58,9 +58,9 @@ Docker:
 
 - Install `docker`
 
-- `docker build -t beam .`
+- `docker build -t api .`
 
-- `docker run -e DATABASE_URL=postgres://postgres:postgres@localhost:5432/beam -e PORT=3000 -p 3000:3000 --net=host beam npm run start`
+- `docker run -e DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres -e PORT=3000 -p 3000:3000 --net=host api npm run start`
 
 Environment parameters:
 - `APP_NAME` - string (default: Beam)
@@ -80,13 +80,8 @@ Environment parameters:
 - `AWS_REGION` - string (default : "us-east-1")
 - `S3_BUCKET` - string  
 - `S3_URL_EXPIRES_IN` - integer (seconds, default: 60) 
-- `S3_FOLDER_BEAM` - string (default: 'beams')
 - `S3_FOLDER_USER` - string (default: 'profiles') 
-- `EMAIL_FROM` - string (default : 'noreply@beamauthentic.com')
-- `EMAILS_SUPPORT` - string (default : 'noreply@beamauthentic.com') List of emails separated by comma.
+- `EMAIL_FROM` - string (default : 'noreply@domain.com')
+- `EMAILS_SUPPORT` - string (default : 'noreply@domain.com') List of emails separated by comma.
 - `SNS_PLATFORM_ARN_ANDROID` - string. Platform aplication ARN for android.
 - `SNS_PLATFORM_ARN_IOS` - string.  Platform aplication ARN for android.
-- `CROWDRISE_CLIENT_ID` - string.
-- `CROWDRISE_CLIENT_SECRET` - string
-- `TWITTER_CONSUMER_KEY` - string,
-- `TWITTER_CONSUMER_SECRET` - string,
