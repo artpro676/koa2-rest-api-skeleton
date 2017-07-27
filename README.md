@@ -63,7 +63,7 @@ Docker:
 - `docker run -e DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres -e PORT=3000 -p 3000:3000 --net=host api npm run start`
 
 Environment parameters:
-- `APP_NAME` - string (default: Beam)
+- `APP_NAME` - string (default: ProjectName)
 - `LOG_LEVEL` - string (default: info)
 - `DEVELOPER_EMAIL` - string
 - `STAGE` - string
