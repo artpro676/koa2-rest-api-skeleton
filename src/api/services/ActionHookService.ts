@@ -2,17 +2,16 @@
 
 import * as _ from 'lodash'
 import AppError from './AppError'
-import RoleService from './RoleService'
+import PermissionService from 'auth/PermissionService'
 import models from '../../models'
 import logger from "../../config/logger";
-import {throws} from "assert";
 
 const checkOwnerAccess = (ownerFieldName = 'userId') => {
     return function (ctx, instance) {
 
         const user = ctx.state.account;
 
-        if (RoleService.roleIsAdmin(user.role)) { return instance }
+        if (PermissionService.roleIsAdmin(user.role)) { return instance }
 
         if (!instance[ownerFieldName]) {
             logger.warn(`[ActionService] Field ${ownerFieldName} doesn't exist at model ${instance.getTableName()}`);
@@ -30,7 +29,7 @@ const setOwner = (ownerFieldName = 'userId') => {
 
         const user = ctx.state.account;
 
-        if (RoleService.roleIsAdmin(user.role) && !_.isEmpty(instance[ownerFieldName])) { return true }
+        if (PermissionService.roleIsAdmin(user.role) && !_.isEmpty(instance[ownerFieldName])) { return true }
 
         instance[ownerFieldName] = user.id;
 
@@ -44,7 +43,7 @@ const setDefaultStream = () => {
 
         const user = ctx.state.account;
 
-        //if (RoleService.roleIsAdmin(user.role)) { return true }
+        //if (PermissionService.roleIsAdmin(user.role)) { return true }
 
         if (!instance.streamId) {
             const stream = await models.Stream.findOne({

@@ -7,12 +7,12 @@ import {EmailTemplate} from 'email-templates';
 import config from '../../config/app';
 import models from '../../models';
 import logger from '../../config/logger';
-import aws from './AWSService';
+import SESService from '../aws/SESService';
 
 const templatesDir = path.join(__dirname, '..', 'templates');
 const prefix = '[EMAIL]';
 const stage = getAppStageForDisplay();
-const ses = new aws.SES({apiVersion: '2010-12-01'});
+
 
 const templatesMeta = {
     'reset': {
@@ -107,35 +107,13 @@ const filterEmails = async function (emails) {
  * Send email via AWS SES.
  * @param options
  */
-const send = async function (options) {
+const send = async function (options:any) {
 
-    const toEmails = await filterEmails(options.to);
+    if(!_.isEmpty(options.to)) {
+        options.to = await filterEmails(options.to);
+    }
 
-    return new Bluebird(function (resolve, reject) {
-
-        if(_.size(toEmails)== 0){ return reject("List of recepient emails is empty.") }
-
-        if(!config.email.live) {
-            logger.info('Skipped sending mails, because its not LIVE MODE');
-            return resolve();
-        }
-
-        ses.sendEmail({
-            Source: config.email.from,
-            Destination: {ToAddresses: toEmails},
-            Message: {
-                Subject: {Data: options.subject},
-                Body: {
-                    Html: {Data: options.html},
-                    Text: {Data: options.text}
-                }
-            }
-        }, function (err, data) {
-            if (err) { return reject(err) }
-            logger.info(`${prefix} "${options.subject}" sent to user ${options.to} | ${data}`);
-            resolve(data);
-        })
-    });
+    return SESService.sendEmail(options)
 };
 
 

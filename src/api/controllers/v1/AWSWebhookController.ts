@@ -67,7 +67,7 @@ const handleIncomingSNS = async function (ctx) {
             const subscribeURL = ctx.request.body.SubscribeURL;
 
             try {
-                result = await RequestService.send(subscribeURL);
+                result = await RequestService.GET(subscribeURL);
             } catch (e) {
                 throw new AppError(500, e)
             }

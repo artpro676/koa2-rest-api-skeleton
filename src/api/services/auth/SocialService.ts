@@ -4,7 +4,7 @@ import config from '../../config/app';
 import models from '../../models';
 import * as _ from 'lodash';
 import * as Twitter from 'twitter';
-import AppError from './AppError';
+import AppError from '../AppError';
 import RequestService from './RequestService';
 import * as Bluebird from "bluebird";
 
@@ -15,7 +15,7 @@ const getClientId = async function(user, provider, token, secretToken) {
 
     switch (provider) {
         case 'facebook':
-            response = await RequestService.send(`https://graph.facebook.com/me?access_token=${token}`);
+            response = await RequestService.GET(`https://graph.facebook.com/me?access_token=${token}`);
             return response.id;
         case 'twitter':
             if(!secretToken){ throw new AppError(400, 'Access secret token is required')}

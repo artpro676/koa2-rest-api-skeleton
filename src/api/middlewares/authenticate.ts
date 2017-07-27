@@ -1,7 +1,7 @@
 'use strict';
 
 import Utils from '../services/Utils';
-import TokenService from '../services/TokenService';
+import TokenService from '../services/auth/TokenService';
 import AppError from '../services/AppError';
 import models from '../../models';
 import logger from "../../config/logger";

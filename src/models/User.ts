@@ -96,7 +96,7 @@ export default function (sequelize, DataTypes) {
             defaultValue: statuses.NEW,
             enum: _.values(statuses)
         },
-        description: {
+        bio: {
             type: DataTypes.STRING
         },
         isPrivate: {
@@ -191,34 +191,6 @@ export default function (sequelize, DataTypes) {
      * List of ORM hooks.
      */
     const hooks = {
-        beforeBulkCreate: function (instances, options) {
-            logger.info('beforeBulkCreate');
-
-            return new Bluebird(function (resolve, reject) {
-                resolve(instances)
-            })
-        },
-        beforeBulkDestroy(options, next) {
-            logger.info('beforeBulkDestroy');
-            options.where.role = {$ne: 'super'};
-            next();
-        },
-        beforeBulkUpdate(options, next) {
-            logger.info('beforeBulkUpdate');
-            next();
-        },
-        beforeValidate(instance, options, next) {
-            logger.info('beforeValidate');
-            next();
-        },
-        afterValidate(instance, options, next) {
-            logger.info('afterValidate');
-            next();
-        },
-        validationFailed(instance, options, error, next) {
-            logger.info('validationFailed', error);
-            next();
-        },
         beforeCreate: async function (instance, options) {
             logger.info('beforeCreate');
 
@@ -286,10 +258,6 @@ export default function (sequelize, DataTypes) {
             return new Bluebird(function (resolve, reject) {
                 resolve(instance)
             })
-        },
-        beforeUpsert(values, options, next) {
-            logger.info('beforeUpsert', values);
-            next();
         },
         afterCreate: async function (instance, options) {
             logger.info('afterCreate');

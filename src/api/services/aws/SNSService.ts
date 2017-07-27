@@ -2,7 +2,7 @@
 
 import config from '../../config/app';
 import * as _ from 'lodash';
-import AppError from './AppError';
+import AppError from '../AppError';
 import AWS from './AWSService';
 import * as Bluebird from "bluebird";
 import logger from "../../config/logger";

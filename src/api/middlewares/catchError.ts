@@ -1,7 +1,7 @@
 'use strict';
 
 import AppError from '../services/AppError';
-import EmailService from '../services/EmailService';
+import EmailService from '../services/email/EmailService';
 import logger from '../../config/logger';
 import * as _ from 'lodash';
 import config from '../../config/app';

@@ -4,7 +4,7 @@ import models from '../../models';
 import config from '../../config/app';
 import logger from '../../config/logger';
 import AppError from './AppError';
-import EmailService from './EmailService';
+import EmailService from './email/EmailService';
 import * as errorToHtml from 'error-to-html';
 import * as _ from 'lodash';
 

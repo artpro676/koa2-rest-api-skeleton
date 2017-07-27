@@ -2,19 +2,19 @@
 
 module.exports = {
     up: async function(queryInterface, Sequelize) {
-        await queryInterface.createTable('tag', {
+
+        await queryInterface.createTable('email_black_list', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            value: {
-                type: Sequelize.STRING
+            email: {
+                type: Sequelize.STRING,
             },
-            counter: {
-                type: Sequelize.INTEGER,
-                defaultValue: 0
+            reasonType: {
+                type: Sequelize.STRING
             },
             createdAt: {
                 type: Sequelize.DATE
@@ -24,13 +24,13 @@ module.exports = {
             }
         });
 
-        await queryInterface.addIndex('tag', ['value'], {
-            indexName: 'tag_unique_index',
+        return queryInterface.addIndex('email_blacklist', ['email'], {
+            indexName: 'email_blacklist_email_unique_index',
             indicesType: 'UNIQUE'
         });
     },
     down: async function(queryInterface, Sequelize) {
-        await queryInterface.removeIndex('tag', 'tag_unique_index');
-        await queryInterface.dropTable('tag');
+        await queryInterface.removeIndex('email_black_list', 'email_blacklist_email_unique_index');
+        return queryInterface.dropTable('email_black_list');
     }
 };

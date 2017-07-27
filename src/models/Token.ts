@@ -24,9 +24,8 @@ export default function (sequelize, DataTypes) {
         TWITTER_AUTH_TOKEN: 'twitter_auth_token',
         TWITTER_AUTH_SECRET_TOKEN: 'twitter_auth_secret_token',
         NOTIFICATION_DISABLE_TOKEN: 'notification_disable_token',
-        CROWDRISE_ACCESS_TOKEN: 'crowdrise_access_token',
-        CROWDRISE_REFRESH_TOKEN: 'crowdrise_refresh_token'
     };
+
     const fields = {
         userId: {
             type: DataTypes.INTEGER

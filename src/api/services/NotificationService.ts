@@ -4,10 +4,10 @@ import * as _ from 'lodash';
 import config from '../../config/app';
 import logger from '../../config/logger';
 import models from '../../models';
-import SNSService from '../services/SNSService';
-import TokenService from '../services/TokenService';
-import EmailService from '../services/EmailService';
-import Utils from '../services/Utils';
+import SNSService from 'aws/SNSService';
+import TokenService from 'auth/TokenService';
+import EmailService from 'email/EmailService';
+import Utils from './Utils';
 import AppError from "./AppError";
 
 /**

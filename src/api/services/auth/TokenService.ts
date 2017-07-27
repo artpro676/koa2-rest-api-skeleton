@@ -3,12 +3,10 @@
 import config from '../../config/app';
 import models from '../../models';
 import * as _ from 'lodash';
-import AppError from './AppError';
-import RequestService from './RequestService';
+import AppError from '../AppError';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import * as Bluebird from 'bluebird';
-
 
 /**
  * Creates reset pass token.
@@ -152,6 +150,6 @@ export default {
     createConfirmationToken,
     createRefreshToken,
     refreshAuthToken,
-    verifyJWTToken,
+    verifyJwtToken,
     signJwtToken
 };

@@ -1,59 +1,58 @@
 'use strict';
 
-import models from '../models';
-
 module.exports = {
     up: function(queryInterface, Sequelize) {
-
-        return queryInterface.createTable('beam', {
+        return queryInterface.createTable('user', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            userId: {
-                allowNull: false,
-                type: Sequelize.INTEGER
+            firstName: {
+                type: Sequelize.STRING
             },
-            type: {
+            lastName: {
+                type: Sequelize.STRING
+            },
+            password: {
+                type: Sequelize.STRING
+            },
+            email: {
+                type: Sequelize.STRING
+            },
+            role: {
                 type: Sequelize.STRING
             },
             status: {
                 type: Sequelize.STRING
             },
-            title: {
+            picture: {
                 type: Sequelize.STRING
             },
-            description: {
+            bio: {
                 type: Sequelize.TEXT
             },
-            linkUrl: {
-                type: Sequelize.TEXT
-            },
-            hasDonation: {
-                type: Sequelize.BOOLEAN
-            },
-            donationAmount: {
-                type: Sequelize.DECIMAL
-            },
-            tags: {
-                type: Sequelize.ARRAY(Sequelize.STRING)
-            },
-            deletedAt: {
+            dob: {
                 type: Sequelize.DATE
             },
             createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE
+            },
+            deletedAt: {
+                allowNull: true,
                 type: Sequelize.DATE
             },
             updatedAt: {
-
+                allowNull: false,
                 type: Sequelize.DATE
             }
         });
 
+
     },
     down: function(queryInterface, Sequelize) {
-        return queryInterface.dropTable('beam');
+        return queryInterface.dropTable('user');
     }
 };

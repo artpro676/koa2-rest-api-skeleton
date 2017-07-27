@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import * as Bluebird from 'bluebird';
 import config from '../../config/app';
-import AppError from './AppError';
+import AppError from '../AppError';
 import * as Ajv from 'ajv';
 import NotificationService from '../NotificationService';
 import models from '../../../models';

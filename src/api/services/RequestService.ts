@@ -8,7 +8,7 @@ import * as isJSON from 'is-json';
 import * as Bluebird from "bluebird";
 import AppError from "./AppError";
 
-const send = function(url, method = 'GET', header = {}, body = {}) {
+const send =  function(method = 'GET', url, header = {}, body = {}) {
 
     return new Bluebird(function (resolve, reject) {
         delete  header["content-length"];
@@ -49,4 +49,9 @@ const send = function(url, method = 'GET', header = {}, body = {}) {
     });
 };
 
-export default {send}
+export default {
+    GET: _.partial(send, 'GET'),
+    POST: _.partial(send, 'POST'),
+    PUT: _.partial(send, 'PUT'),
+    DELETE: _.partial(send, 'DELETE')
+}
