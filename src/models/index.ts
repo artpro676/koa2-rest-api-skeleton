@@ -22,6 +22,15 @@ fs.readdirSync(__dirname)
         // "model_name" => "ModelName"
         const modelName = _.upperFirst(_.camelCase(model.name));
 
+        if(!_.isEmpty(model.instanceMethods) && _.isArray(model.instanceMethods)){
+
+            _.each(model.instanceMethods, (v, k) => {
+                model.prototype[k] = v;
+            })
+
+            delete model.instanceMethods;
+        }
+
         models[modelName] = model;
     });
 

@@ -7,24 +7,26 @@ import * as _ from 'lodash';
 import models from "./index";
 import * as Bluebird from "bluebird";
 
+export const authTypes = {
+    OTHER: 'other',
+    EMAIL: 'email',
+    SOCIAL_TWITTER: 'sc_twitter',
+    SOCIAL_FACEBOOK: 'sc_facebook'
+};
+
+export const types = {
+    REFRESH_TOKEN: 'refresh_token',
+    RESET_PASSWORD_TOKEN: 'reset_password_token',
+    SIGNUP_CONFIRMATION_TOKEN: 'confirmation_token',
+    FACEBOOK_AUTH_TOKEN: 'facebook_auth_token',
+    TWITTER_AUTH_TOKEN: 'twitter_auth_token',
+    TWITTER_AUTH_SECRET_TOKEN: 'twitter_auth_secret_token',
+    NOTIFICATION_DISABLE_TOKEN: 'notification_disable_token',
+};
+
 export default function (sequelize, DataTypes) {
 
-    const authTypes = {
-        OTHER: 'other',
-        EMAIL: 'email',
-        SOCIAL_TWITTER: 'sc_twitter',
-        SOCIAL_FACEBOOK: 'sc_facebook'
-    };
-
-    const types = {
-        REFRESH_TOKEN: 'refresh_token',
-        RESET_PASSWORD_TOKEN: 'reset_password_token',
-        SIGNUP_CONFIRMATION_TOKEN: 'confirmation_token',
-        FACEBOOK_AUTH_TOKEN: 'facebook_auth_token',
-        TWITTER_AUTH_TOKEN: 'twitter_auth_token',
-        TWITTER_AUTH_SECRET_TOKEN: 'twitter_auth_secret_token',
-        NOTIFICATION_DISABLE_TOKEN: 'notification_disable_token',
-    };
+    const TABLE_NAME = 'token';
 
     const fields = {
         userId: {
@@ -52,12 +54,6 @@ export default function (sequelize, DataTypes) {
         }
     };
 
-    const indexes = [
-        {unique: true, fields: ['value', 'userId']}
-    ];
-
-    const instanceMethods = {};
-
     /**
      * List of hooks
      * @type {{beforeCreate: ((instance, options, next)=>Promise<any>)}}
@@ -74,26 +70,23 @@ export default function (sequelize, DataTypes) {
         },
     };
 
+    const instanceMethods = {};
+
+    const classMethods = {
+        associate(models) {
+            // relation to User
+            models.Token.belongsTo(models.User, {as: 'user', foreignKey: "userId"});
+            models.User.hasMany(models.Token, {as: 'tokens'});
+        },
+        types,
+        authTypes
+    };
+
     const options = {
-        indexes,
-        instanceMethods,
         hooks,
         timestamps: true,
         freezeTableName: true,
-        classMethods: {
-            associate(models) {
-                // relation to User
-                models.Token.belongsTo(models.User, {as: 'user', foreignKey: "userId"});
-                models.User.hasMany(models.Token, {as: 'tokens'});
-
-                // relation to UserAuth
-                models.Token.belongsTo(models.UserAuth, {as: 'auth', foreignKey: 'userAuthId'});
-                models.UserAuth.hasMany(models.Token, {as: 'tokens'});
-            },
-            types,
-            authTypes
-        }
     };
 
-    return sequelize.define('token', fields, options)
+    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods, {instanceMethods})
 }

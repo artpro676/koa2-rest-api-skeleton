@@ -7,10 +7,16 @@ import models from '../../models';
 import AppError from '../services/AppError';
 import Utils from '../services/Utils';
 import QueryFilterService from '../services/QueryFilterService';
+import * as isPromise from 'ispromise';
 
 export default (modelName, options:any = {scopes: ['defaultScope'], showDeleted: false, countMethod: false, countDistinct: true}) => {
 
     let {scopes, countDistinct, countMethod, showDeleted} = options;
+
+    if(_.isUndefined(scopes)) {scopes = ['defaultScope']}
+    if(_.isUndefined(countDistinct)) {countDistinct = true}
+    if(_.isUndefined(countMethod)) {countMethod = false}
+    if(_.isUndefined(showDeleted)) {showDeleted = false}
 
     const model = models[modelName];
 

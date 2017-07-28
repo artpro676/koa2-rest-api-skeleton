@@ -6,12 +6,14 @@ import models from "./index";
 import * as _ from "lodash";
 import * as Bluebird from "bluebird";
 
+export const platforms = {
+    IOS: 'ios',
+    ANDROID: 'android',
+};
+
 export default function (sequelize, DataTypes) {
 
-    const platforms = {
-        IOS: 'ios',
-        ANDROID: 'android',
-    };
+    const TABLE_NAME = 'mobile_device';
 
     const fields = {
         userId: {
@@ -46,22 +48,25 @@ export default function (sequelize, DataTypes) {
         // required: ['platform', 'uuid']
     };
 
+    const instanceMethods = {};
+
+    const classMethods = {
+        schema,
+        platforms,
+        associate(models) {
+            // relation to User
+            models.MobileDevice.belongsTo(models.User, {
+                as: 'user',
+                foreignKey: "userId"
+            });
+            models.User.hasMany(models.MobileDevice, {as: 'mobileDevices'});
+        },
+    };
+
     const options = {
         timestamps: true,
         freezeTableName: true,
-        classMethods: {
-            schema,
-            platforms,
-            associate(models) {
-                // relation to User
-                models.MobileDevice.belongsTo(models.User, {
-                    as: 'user',
-                    foreignKey: "userId"
-                });
-                models.User.hasMany(models.MobileDevice, {as: 'mobileDevices'});
-            },
-        }
     };
 
-    return sequelize.define('mobile_device', fields, options)
+    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods, {instanceMethods})
 }

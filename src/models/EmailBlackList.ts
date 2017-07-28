@@ -5,12 +5,13 @@ import config from '../config/app';
 import * as uuid from 'uuid';
 import * as _ from 'lodash';
 
-export default function (sequelize, DataTypes) {
+export const types = {
+    BOUNCE : 'bounce',
+    COMPLAINT : 'complaint',
+};
 
-    const types = {
-        BOUNCE : 'bounce',
-        COMPLAINT : 'complaint',
-    };
+
+export default function (sequelize, DataTypes) {
 
     const fields = {
         email: {
@@ -25,15 +26,14 @@ export default function (sequelize, DataTypes) {
 
     const instanceMethods = {};
 
-    const options = {
-        instanceMethods,
-        timestamps: true,
-        freezeTableName: true,
-        classMethods: {
-            types,
-            //associate(models) {},
-        }
+    const classMethods = {
+        types
     };
 
-    return sequelize.define('email_black_list', fields, options)
+    const options = {
+        timestamps: true,
+        freezeTableName: true,
+    };
+
+    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods, {instanceMethods})
 }

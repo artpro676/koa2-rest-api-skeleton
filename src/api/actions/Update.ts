@@ -7,15 +7,15 @@ import AppError from '../services/AppError';
 import ActionHookService from '../services/ActionHookService';
 import * as Ajv from 'ajv';
 import * as _ from 'lodash';
+import * as isPromise from 'ispromise';
 
 export default (modelName, options:any = {}) => {
 
-    let {preProcessors, paramName, showDeleted} = options;
+    let {before, paramName, showDeleted} = options;
 
-    if(_.isUndefined(preProcessors)){ preProcessors = [ActionHookService.checkOwnerAccess()] }
+    if(_.isUndefined(before)){ before = [ActionHookService.checkOwnerAccess()] }
     if(!paramName){ paramName = 'id' }
     if(_.isUndefined(showDeleted)){ showDeleted = false }
-
 
     const model = models[modelName];
 
@@ -49,10 +49,10 @@ export default (modelName, options:any = {}) => {
         }
 
         // process additional specific verifications
-        if (_.size(preProcessors) > 0) {
-            for(let i in preProcessors){
-                const preProcess = preProcessors[i];
-                entityRow = await preProcess(ctx, entityRow); // could throw an exception if something is wrong
+        if (_.size(before) > 0) {
+            for(let i in before){
+                const beforeResult = before[i](ctx, entityRow); // could throw an exception if something is wrong
+                entityRow = isPromise(beforeResult) ? await beforeResult : beforeResult;
             }
         }
 

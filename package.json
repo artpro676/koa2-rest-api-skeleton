@@ -1,5 +1,9 @@
 {
-  "name": "beam-backend",
+  "name": "koa2-rest-app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artpro676/koa2-rest-api-skeleton.git"
+  },
   "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
@@ -54,6 +58,7 @@
     "email-templates": "^2.5.4",
     "error-to-html": "^0.1.0",
     "is-json": "^2.0.1",
+    "ispromise": "^1.1.0",
     "jsonwebtoken": "^7.2.1",
     "koa": "^2.0.0",
     "koa-bodyparser": "^2.3.0",
@@ -75,7 +80,7 @@
     "pg-hstore": "^2.3.2",
     "pug": "^2.0.0-beta11",
     "request": "^2.81.0",
-    "sequelize": "^3.29.0",
+    "sequelize": "^4.4.0",
     "sequelize-cli": "^2.5.1",
     "shorthash": "0.0.2",
     "slug": "^0.9.1",

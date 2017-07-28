@@ -7,9 +7,15 @@ import AppError from '../services/AppError';
 import ActionHookService from '../services/ActionHookService';
 import * as Ajv from 'ajv';
 import * as _ from 'lodash';
+import * as isPromise from 'ispromise';
 
 
-export default (modelName, preProcessors = []) => {
+export default (modelName, options = {before: [], after: []}) => {
+
+    let {before, after} = options;
+
+    if(_.isUndefined(before)) {before = []}
+    if(_.isUndefined(after)) {before = []}
 
     const model = models[modelName];
 
@@ -24,10 +30,10 @@ export default (modelName, preProcessors = []) => {
         let data:any = ctx.request.body;
 
         // process additional specific verifications
-        if(_.size(preProcessors) > 0) {
-
-            for(let i in preProcessors){
-                data = await preProcessors[i](ctx, data); // could throw an exception if something is wrong
+        if (_.size(before) > 0) {
+            for(let i in before){
+                const beforeResult = before[i](ctx, entityRow); // could throw an exception if something is wrong
+                entityRow = isPromise(beforeResult) ? await beforeResult : beforeResult;
             }
         }
 
@@ -40,6 +46,14 @@ export default (modelName, preProcessors = []) => {
         }
 
         let entity = await model.create(data);
+
+        // process additional specific verifications
+        if (_.size(after) > 0) {
+            for(let i in after){
+                const afterResult = after[i](ctx, entity); // could throw an exception if something is wrong
+                entity = isPromise(afterResult) ? await afterResult : afterResult;
+            }
+        }
 
         ctx.state[_.toLower(modelName)] = entity;
 

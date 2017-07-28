@@ -6,7 +6,7 @@ import models from '../../models';
 import AppError from '../services/AppError';
 import * as Ajv from 'ajv';
 import * as _ from 'lodash';
-
+import * as isPromise from 'ispromise';
 
 export default (modelName) => {
 

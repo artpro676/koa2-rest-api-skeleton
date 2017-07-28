@@ -6,8 +6,14 @@ import models from '../../models';
 import AppError from '../services/AppError';
 import ActionHookService from '../services/ActionHookService';
 import * as _ from 'lodash';
+import * as isPromise from 'ispromise';
 
-export default (modelName, preProcessors = [ActionHookService.checkOwnerAccess()], paramName = 'id') => {
+export default (modelName, options = {before: [ActionHookService.checkOwnerAccess()], paramName: 'id'}) => {
+
+    let {before, paramName} = options;
+
+    if(_.isUndefined(before)) {before = []}
+    if(!paramName) {paramName = 'id'}
 
     const model = models[modelName];
 
@@ -24,10 +30,11 @@ export default (modelName, preProcessors = [ActionHookService.checkOwnerAccess()
         if (!entityRow) throw new AppError(404, `${modelName} not found or is already deleted`);
 
         // process additional specific verifications
-        if(_.size(preProcessors) > 0) {
-            _.each(preProcessors, preProcess => {
-                entityRow = preProcess(ctx, entityRow); // could throw an exception if something is wrong
-            })
+        if (_.size(before) > 0) {
+            for(let i in before){
+                const beforeResult = before[i](ctx, entityRow); // could throw an exception if something is wrong
+                entityRow = isPromise(beforeResult) ? await beforeResult : beforeResult;
+            }
         }
 
         let count = await entityRow.destroy();
