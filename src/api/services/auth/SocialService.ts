@@ -1,11 +1,11 @@
 'use strict';
 
-import config from '../../config/app';
-import models from '../../models';
+import config from '../../../config/app';
+import models from '../../../models';
 import * as _ from 'lodash';
 import * as Twitter from 'twitter';
 import AppError from '../AppError';
-import RequestService from './RequestService';
+import RequestService from '../RequestService';
 import * as Bluebird from "bluebird";
 
 const getClientId = async function(user, provider, token, secretToken) {
@@ -17,24 +17,24 @@ const getClientId = async function(user, provider, token, secretToken) {
         case 'facebook':
             response = await RequestService.GET(`https://graph.facebook.com/me?access_token=${token}`);
             return response.id;
-        case 'twitter':
-            if(!secretToken){ throw new AppError(400, 'Access secret token is required')}
-
-            const  twitterClient = new Twitter({
-                consumer_key: config.twitter.consumerKey,
-                consumer_secret: config.twitter.consumerSecret,
-                access_token_key: token,
-                access_token_secret: secretToken
-            });
-
-            let res:any;
-            try {
-                res = await getTwitterAccount(twitterClient);
-            } catch (e) {
-                throw new AppError(401, `Twitter error: ${_.get(e, '[0].message')}`);
-            }
-
-            return res.id;
+        // case 'twitter':
+        //     if(!secretToken){ throw new AppError(400, 'Access secret token is required')}
+        //
+        //     const  twitterClient = new Twitter({
+        //         consumer_key: config.twitter.consumerKey,
+        //         consumer_secret: config.twitter.consumerSecret,
+        //         access_token_key: token,
+        //         access_token_secret: secretToken
+        //     });
+        //
+        //     let res:any;
+        //     try {
+        //         res = await getTwitterAccount(twitterClient);
+        //     } catch (e) {
+        //         throw new AppError(401, `Twitter error: ${_.get(e, '[0].message')}`);
+        //     }
+        //
+        //     return res.id;
     }
     return false;
 };

@@ -3,12 +3,19 @@
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import * as Bluebird from 'bluebird';
-import config from '../../config/app';
+import config from '../../../config/app';
+import logger from '../../../config/logger';
 import AppError from '../AppError';
 import * as Ajv from 'ajv';
+import * as _ from 'lodash';
+import * as moment from 'moment';
 import NotificationService from '../NotificationService';
 import models from '../../../models';
 import PasswordService from './PasswordService';
+import SocialService from './SocialService';
+import TokenService from './TokenService';
+import MobileDeviceService from '../MobileDeviceService';
+
 
 const ajv = Ajv({allErrors: true});
 
@@ -129,7 +136,7 @@ async function createTokens(user, provider = 'email') {
  * @param data
  * @returns {any}
  */
-const socialSignin = async function (data:any, provider) {
+const socialSignin = async function (data:any) {
 
     let validCredentials = ajv.validate(signinSocialSchema, data);
     if (!validCredentials) {throw new AppError(400, ajv.errorsText(), ajv.errors.toString())}
@@ -142,7 +149,7 @@ const socialSignin = async function (data:any, provider) {
 
     if (user) {
         if (user.isDisabled()) {throw new AppError(403, 'Account is currently disabled, please contact customer support.')}
-        if (user.deletedAt != null) {await UserService.recoverProfile(user)}
+        if (user.deletedAt != null) {await user.restore()}
     }
 
     const authId = await SocialService.getClientId(user, data.provider, data.token, data.secretToken);
@@ -247,10 +254,6 @@ const signupConfirmation = async function (confirmToken) {
 };
 
 export default {
-    comparePasswords,
-    hashPassword,
-    signToken,
-    verifyToken,
     signin,
     socialSignin,
     signup,

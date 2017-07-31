@@ -5,20 +5,23 @@ import models from '../models';
 module.exports = {
     up: function(queryInterface, Sequelize) {
         return queryInterface.createTable('mobile_device', {
-            id: {
-                allowNull: false,
-                autoIncrement: true,
+            uuid: {
+                type: Sequelize.STRING,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                allowNull: false,
             },
             userId: {
                 type: Sequelize.INTEGER
             },
             platform: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
+            token: {
                 type: Sequelize.STRING
             },
-            uuid: {
-                type: Sequelize.TEXT
+            endpointArn: {
+                type: Sequelize.STRING
             },
             createdAt: {
                 allowNull: false,

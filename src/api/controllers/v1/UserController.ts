@@ -4,9 +4,9 @@ import config from '../../../config/app';
 import logger from '../../../config/logger';
 import models from '../../../models';
 import AppError from '../../services/AppError';
-import EmailService from '../../services/EmailService';
-import ActionService from '../../services/ActionService';
-import {roles} from '../../services/RoleService';
+import EmailService from '../../services/email/EmailService';
+import ActionService from '../../services/ActionHookService';
+import {roles} from '../../services/auth/PermissionService';
 import GetList from '../../actions/GetList';
 import Remove from '../../actions/Remove';
 
@@ -161,7 +161,7 @@ const setPermanentFollowing = function(value) {
  * delete /user/:id
  */
 const deleteUser = async function(ctx) {
-    const action = Remove('User', [ActionService.checkOwnerAccess('id')]);
+    const action = Remove('User', {before: [ActionService.checkOwnerAccess('id')]});
 
     if(_.get(ctx, 'request.body.description')){
         await models.User.update({

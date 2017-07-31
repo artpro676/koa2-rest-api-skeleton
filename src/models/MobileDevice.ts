@@ -1,8 +1,6 @@
 'use strict';
 
 import logger from '../config/logger';
-import SNSService from '../api/services/SNSService';
-import models from "./index";
 import * as _ from "lodash";
 import * as Bluebird from "bluebird";
 
@@ -16,16 +14,16 @@ export default function (sequelize, DataTypes) {
     const TABLE_NAME = 'mobile_device';
 
     const fields = {
+        uuid: {
+            type: DataTypes.STRING,
+            primaryKey: true
+        },
         userId: {
             type: DataTypes.INTEGER
         },
         platform: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        uuid: {
-            type: DataTypes.STRING,
-            primaryKey: true
         },
         token: {
             type: DataTypes.STRING
@@ -51,6 +49,7 @@ export default function (sequelize, DataTypes) {
     const instanceMethods = {};
 
     const classMethods = {
+        // instanceMethods,
         schema,
         platforms,
         associate(models) {
@@ -68,5 +67,5 @@ export default function (sequelize, DataTypes) {
         freezeTableName: true,
     };
 
-    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods, {instanceMethods})
+    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods)
 }

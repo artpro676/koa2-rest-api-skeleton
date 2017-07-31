@@ -2,7 +2,7 @@
 
 import * as _ from 'lodash'
 import AppError from './AppError'
-import PermissionService from 'auth/PermissionService'
+import PermissionService from './auth/PermissionService'
 import models from '../../models'
 import logger from "../../config/logger";
 
@@ -14,7 +14,7 @@ const checkOwnerAccess = (ownerFieldName = 'userId') => {
         if (PermissionService.roleIsAdmin(user.role)) { return instance }
 
         if (!instance[ownerFieldName]) {
-            logger.warn(`[ActionService] Field ${ownerFieldName} doesn't exist at model ${instance.getTableName()}`);
+            logger.warn(`[ActionHookService] Field ${ownerFieldName} doesn't exist at model ${instance.getTableName()}`);
             return instance;
         }
 

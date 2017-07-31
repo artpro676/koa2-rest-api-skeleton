@@ -3,7 +3,7 @@
 import sequelize from './connection';
 import config from './app';
 import logger from './logger';
-import SNSService from '../api/services/SNSService';
+import SNSService from '../api/services/aws/SNSService';
 
 const bootstrap = async function () {
 	logger.info('bootstrapping...');

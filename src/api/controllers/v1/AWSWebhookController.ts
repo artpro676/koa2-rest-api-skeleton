@@ -8,7 +8,7 @@ import * as Ajv from 'ajv';
 import * as _ from 'lodash';
 import RequestService from '../../services/RequestService';
 
-const types = models.EmailBlacklist.types;
+const types = models.EmailBlackList.types;
 
 const processNotification = async function (ctx) {
 
@@ -43,7 +43,7 @@ const processNotification = async function (ctx) {
 
     let result:any;
     try {
-        result = await models.EmailBlacklist.bulkCreate(emails);
+        result = await models.EmailBlackList.bulkCreate(emails);
     } catch (e) {
         throw new AppError(500, 'SequelizeError : ' + e.message);
     }

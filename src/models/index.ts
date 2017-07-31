@@ -17,16 +17,17 @@ fs.readdirSync(__dirname)
         return (file.indexOf('.') !== 0) && (file !== basename);
     })
     .forEach(function (file) {
+
         let model:any = sequelize.import(path.join(__dirname, file));
 
         // "model_name" => "ModelName"
         const modelName = _.upperFirst(_.camelCase(model.name));
 
-        if(!_.isEmpty(model.instanceMethods) && _.isArray(model.instanceMethods)){
+        if(!_.isEmpty(model.instanceMethods)){
 
             _.each(model.instanceMethods, (v, k) => {
                 model.prototype[k] = v;
-            })
+            });
 
             delete model.instanceMethods;
         }
@@ -42,7 +43,5 @@ Object.keys(models).forEach(function (modelName) {
 
 models.sequelize = sequelize;
 models.Sequelize = SequelizeStatic;
-
-models.SavedContent.removeAttribute('id');
 
 export default models;

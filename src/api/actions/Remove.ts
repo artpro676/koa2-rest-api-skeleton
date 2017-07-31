@@ -8,7 +8,7 @@ import ActionHookService from '../services/ActionHookService';
 import * as _ from 'lodash';
 import * as isPromise from 'ispromise';
 
-export default (modelName, options = {before: [ActionHookService.checkOwnerAccess()], paramName: 'id'}) => {
+export default (modelName, options:any = {before: [ActionHookService.checkOwnerAccess()], paramName: 'id'}) => {
 
     let {before, paramName} = options;
 

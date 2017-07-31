@@ -4,7 +4,6 @@ import logger from '../config/logger';
 import config from '../config/app';
 import * as uuid from 'uuid';
 import * as _ from 'lodash';
-import models from "./index";
 import * as Bluebird from "bluebird";
 
 export const authTypes = {
@@ -73,6 +72,7 @@ export default function (sequelize, DataTypes) {
     const instanceMethods = {};
 
     const classMethods = {
+        // instanceMethods,
         associate(models) {
             // relation to User
             models.Token.belongsTo(models.User, {as: 'user', foreignKey: "userId"});
@@ -88,5 +88,5 @@ export default function (sequelize, DataTypes) {
         freezeTableName: true,
     };
 
-    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods, {instanceMethods})
+    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods)
 }

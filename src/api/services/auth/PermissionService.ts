@@ -20,6 +20,10 @@ const check = function (user = {}, reqPermission) {
     return _.get(permissions, role, 0) >= permissions[reqPermission];
 };
 
+const roleIsAdmin = role => {
+    return _.includes([roles.ADMIN], role)
+};
+
 export default {
     check,
     roleIsAdmin

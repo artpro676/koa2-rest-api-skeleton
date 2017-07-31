@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 import * as isPromise from 'ispromise';
 
 
-export default (modelName, options = {before: [], after: []}) => {
+export default (modelName, options:any = {before: [], after: []}) => {
 
     let {before, after} = options;
 
@@ -32,8 +32,8 @@ export default (modelName, options = {before: [], after: []}) => {
         // process additional specific verifications
         if (_.size(before) > 0) {
             for(let i in before){
-                const beforeResult = before[i](ctx, entityRow); // could throw an exception if something is wrong
-                entityRow = isPromise(beforeResult) ? await beforeResult : beforeResult;
+                const beforeResult = before[i](ctx, data); // could throw an exception if something is wrong
+                data = isPromise(beforeResult) ? await beforeResult : beforeResult;
             }
         }
 

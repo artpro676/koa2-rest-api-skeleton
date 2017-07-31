@@ -3,10 +3,11 @@
 import logger from '../config/logger';
 import config from '../config/app';
 import AppError from '../api/services/AppError';
-import AuthService from '../api/services/AuthService';
+import AuthService from '../api/services/auth/AuthService';
 import {roles} from '../api/services/auth/PermissionService';
 import PermissionService from '../api/services/auth/PermissionService';
-import S3Service from '../api/services/S3Service';
+import PasswordService from '../api/services/auth/PasswordService';
+import S3Service from '../api/services/aws/S3Service';
 import * as _ from 'lodash';
 import * as slug from 'slug';
 import * as Bluebird from "bluebird";
@@ -29,6 +30,8 @@ export const genders = {
 };
 
 export default function (sequelize, DataTypes) {
+
+    const TABLE_NAME = 'user';
 
     /**
      * Defined fields.
@@ -70,7 +73,7 @@ export default function (sequelize, DataTypes) {
             enum: _.values(statuses)
         },
         bio: {
-            type: DataTypes.STRING
+            type: DataTypes.TEXT
         },
         gender: {
             type: DataTypes.STRING
@@ -123,7 +126,7 @@ export default function (sequelize, DataTypes) {
             }
 
             /** replace plain password with hash */
-            instance.password = await AuthService.hashPassword(instance.password);
+            instance.password = await PasswordService.hashPassword(instance.password);
 
             return new Bluebird(function (resolve, reject) {
                 resolve(instance)
@@ -132,7 +135,7 @@ export default function (sequelize, DataTypes) {
         beforeUpdate: async function (instance, options) {
             logger.info('beforeUpdate');
 
-            if (options.fields.includes('password')) {instance.password = await AuthService.hashPassword(instance.password)}
+            if (options.fields.includes('password')) {instance.password = await PasswordService.hashPassword(instance.password)}
 
             return new Bluebird(function (resolve, reject) {
                 resolve(instance)
@@ -141,7 +144,7 @@ export default function (sequelize, DataTypes) {
         beforeSave: async function (instance:any, options) {
             logger.info('beforeSave');
 
-            if (options.fields.includes('password')) {instance.password = await AuthService.hashPassword(instance.password)}
+            if (options.fields.includes('password')) {instance.password = await PasswordService.hashPassword(instance.password)}
 
             return new Bluebird(function (resolve, reject) {
                 resolve(instance)
@@ -228,24 +231,20 @@ export default function (sequelize, DataTypes) {
      * Static methods.
      */
     const classMethods = {
+        instanceMethods,
         extraFields,
         schema,
         relations,
         statuses,
         roles,
-        types,
         genders,
-        followRestrictions,
-        associate(models) {
-            models.User.belongsTo(models.User, {as: 'streamer', foreignKey: "streamerId"});
-        }
+        // associate(models) {}
     };
 
     /**
      * Grouped options for sequenize.
      */
     const options = {
-        indexes,
         hooks,
         scopes,
         getterMethods,
@@ -255,6 +254,6 @@ export default function (sequelize, DataTypes) {
         freezeTableName: true,
     };
 
-    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods, {instanceMethods})
+    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods)
 }
 

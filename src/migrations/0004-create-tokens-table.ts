@@ -6,27 +6,28 @@ module.exports = {
     up: function(queryInterface, Sequelize) {
 
         return queryInterface.createTable('token', {
-            id: {
-                allowNull: false,
-                autoIncrement: true,
-                primaryKey: true,
-                type: Sequelize.INTEGER
-            },
             userId: {
-                allowNull: false,
                 type: Sequelize.INTEGER
             },
-            value: {
-                allowNull: false,
-                type: Sequelize.STRING
+            userAuthId: {
+                type: Sequelize.INTEGER
             },
             type: {
-                allowNull: false,
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+            },
+            authType: {
+                type: Sequelize.STRING,
+                defaultValue: models.Token.authTypes.OTHER
+            },
+            value: {
+                type: Sequelize.UUID,
+                primaryKey: true,
+                defaultValue: Sequelize.UUIDV4,
             },
             expiresAt: {
+                type: Sequelize.DATE,
                 allowNull: false,
-                type: Sequelize.DATE
+                defaultValue: models.sequelize.literal(`(now() + interval '1 hour')`)
             },
             createdAt: {
                 allowNull: false,

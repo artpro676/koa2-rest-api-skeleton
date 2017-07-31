@@ -4,13 +4,13 @@ import * as _ from 'lodash';
 import * as Bluebird from 'bluebird';
 import * as path from 'path';
 import {EmailTemplate} from 'email-templates';
-import config from '../../config/app';
-import models from '../../models';
-import logger from '../../config/logger';
+import config from '../../../config/app';
+import models from '../../../models';
+import logger from '../../../config/logger';
 import SESService from '../aws/SESService';
+import AppError from "../AppError";
 
-const templatesDir = path.join(__dirname, '..', 'templates');
-const prefix = '[EMAIL]';
+const templatesDir = path.join(__dirname, 'templates');
 const stage = getAppStageForDisplay();
 
 
@@ -85,14 +85,14 @@ function getAppStageForDisplay() {
 function getMeta(name) {
     let meta = templatesMeta[name];
     if (_.isUndefined(meta))
-        throw new Error(`${prefix} Template "${name}" is not defined!`);
+        throw new AppError(500, `Email template "${name}" is not defined!`);
     else
         return meta;
 }
 
 const filterEmails = async function (emails) {
 
-    const blacklist = await models.EmailBlacklist.findAll({where: {email: {$in : emails}}});
+    const blacklist = await models.EmailBlackList.findAll({where: {email: {$in : emails}}});
 
     if(_.size(blacklist) == 0) { return emails }
 

@@ -18,8 +18,8 @@ const ACLs = {
     AUTHENTICATED_READ: 'authenticated-read',
 };
 
-const createKey = (folder, userId, pictureName = "newfile") => {
-    return `${folder}/${userId}/${pictureName}`
+const createKey = (folder, userId, filename = "newfile") => {
+    return `${folder}/${userId}/${filename}`
 };
 
 const convertUrlToObject = (url) => {
@@ -31,19 +31,19 @@ const convertUrlToObject = (url) => {
 const createUploadUrl = function (folder, id, filename = "newfile") {
     const url = s3.getSignedUrl('putObject', {
         Bucket: config.s3.bucket,
-        Key: createKey(folder, id, pictureName),
+        Key: createKey(folder, id, filename),
         Expires: config.s3.urlExpiresIn
     });
 
-    return _.set(convertUrlToObject(url), 'name', pictureName);
+    return _.set(convertUrlToObject(url), 'name', filename);
 };
 
 const createDownloadUrl = function (folder, id, filename = "newfile") {
-    if (/^http/.test(pictureName)) {return convertUrlToObject(pictureName + '?')}
+    if (/^http/.test(filename)) {return convertUrlToObject(filename + '?')}
 
     const url = s3.getSignedUrl('getObject', {
         Bucket: config.s3.bucket,
-        Key: createKey(folder, id, pictureName),
+        Key: createKey(folder, id, filename),
         Expires: config.s3.urlExpiresIn
     });
 
@@ -52,7 +52,7 @@ const createDownloadUrl = function (folder, id, filename = "newfile") {
 
 const getHeadObject = async function (folder, id, filename = "newfile") {
     return new Bluebird(function (resolve, reject) {
-        s3.headObject({Bucket: config.s3.bucket, Key: createKey(folder, id, pictureName)}, function (err, data) {
+        s3.headObject({Bucket: config.s3.bucket, Key: createKey(folder, id, filename)}, function (err, data) {
             if (err) { return reject(err) }
             resolve(data);
         });

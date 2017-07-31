@@ -10,8 +10,9 @@ export const types = {
     COMPLAINT : 'complaint',
 };
 
-
 export default function (sequelize, DataTypes) {
+
+    const TABLE_NAME = 'email_black_list';
 
     const fields = {
         email: {
@@ -24,8 +25,6 @@ export default function (sequelize, DataTypes) {
         }
     };
 
-    const instanceMethods = {};
-
     const classMethods = {
         types
     };
@@ -35,5 +34,5 @@ export default function (sequelize, DataTypes) {
         freezeTableName: true,
     };
 
-    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods, {instanceMethods})
+    return _.merge(sequelize.define(TABLE_NAME, fields, options), classMethods)
 }

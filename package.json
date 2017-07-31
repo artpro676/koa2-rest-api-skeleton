@@ -16,12 +16,12 @@
     "migrate": "npm run build && ./node_modules/.bin/sequelize db:migrate --migration-path ./build/migrations",
     "preсommit": "npm run lint && npm test",
     "postmerge": "npm install",
-    "postbuild": "cp -r ./src/api/templates ./build/api/templates && cp ./newrelic.js ./build/"
+    "postbuild": "cp -r ./src/api/services/email/templates ./build/api/services/email/templates && cp ./newrelic.js ./build/"
   },
   "engines": {
     "node": "7.0.0"
   },
-  "author": "Sergiy Dragunov",
+  "author": "Artur Kowalsky",
   "license": "ISC",
   "dependencies": {
     "@types/ajv": "^1.0.0",
@@ -81,7 +81,7 @@
     "pug": "^2.0.0-beta11",
     "request": "^2.81.0",
     "sequelize": "^4.4.0",
-    "sequelize-cli": "^2.5.1",
+    "sequelize-cli": "^2.7.0",
     "shorthash": "0.0.2",
     "slug": "^0.9.1",
     "sns-validator": "^0.3.0",

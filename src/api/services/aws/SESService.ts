@@ -2,15 +2,17 @@
 
 import * as Bluebird from 'bluebird';
 import config from '../../../config/app';
+import logger from '../../../config/logger';
 import aws from './AWSService';
+import * as _ from 'lodash';
 
 const ses = new aws.SES({apiVersion: '2010-12-01'});
 
-const sendEmail = function (options) {
+const sendEmail = function (options:any) {
 
     return new Bluebird(function (resolve, reject) {
 
-        if(_.size(toEmails)== 0){ return reject("List of recepient emails is empty.") }
+        if(_.size(options.to)== 0){ return reject("List of recepient emails is empty.") }
 
         if(!config.email.live) {
             logger.info('Skipped sending mails, because its not LIVE MODE');
@@ -19,7 +21,7 @@ const sendEmail = function (options) {
 
         ses.sendEmail({
             Source: config.email.from,
-            Destination: {ToAddresses: toEmails},
+            Destination: {ToAddresses: options.to},
             Message: {
                 Subject: {Data: options.subject},
                 Body: {
@@ -29,7 +31,7 @@ const sendEmail = function (options) {
             }
         }, function (err, data) {
             if (err) { return reject(err) }
-            logger.info(`${prefix} "${options.subject}" sent to user ${options.to} | ${data}`);
+            logger.info(`Email with "${options.subject}" sent to user ${options.to} | ${data}`);
             resolve(data);
         })
     });

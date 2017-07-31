@@ -12,7 +12,7 @@ module.exports = {
             dob: "2017-02-22 18:57:39",
             gender: "male",
             password: "test123",
-            description: "Here is my description..."
+            bio: "Here is my description..."
         }, {
             id: 2,
             first_name: "Admin",
@@ -22,7 +22,7 @@ module.exports = {
             dob: "2000-01-21 11:11:39",
             gender: "male",
             password: "ADMIN2017",
-            description: "Here is my description..."
+            bio: "Here is my description..."
         }], {individualHooks : true})
 
     },

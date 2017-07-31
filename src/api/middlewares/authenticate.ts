@@ -34,7 +34,7 @@ const authenticate = async function (ctx, next) {
 
     let decoded;
     try {
-        decoded = await TokenService.verifyJWTToken(token);
+        decoded = await TokenService.verifyJwtToken(token);
     } catch (err) {
         throw new AppError(401, err.message);
     }

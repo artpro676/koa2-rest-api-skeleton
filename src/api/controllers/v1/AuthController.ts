@@ -4,8 +4,6 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 import * as Ajv from 'ajv';
 import AppError from '../../services/AppError';
-import SocialService from '../../services/SocialService';
-import MobileDeviceService from '../../services/MobileDeviceService';
 import TokenService from '../../services/auth/TokenService';
 import AuthService from '../../services/auth/AuthService';
 import PasswordService from '../../services/auth/PasswordService';
@@ -110,7 +108,9 @@ const requestResetPassword = async function (ctx) {
  */
 const resetPassword = async function (ctx) {
 
-    await PasswordService.resetPassword(ctx.request.body.password);
+    const resetPasswordToken = Utils.getAuthorizationToken(ctx);
+
+    await PasswordService.resetPassword(ctx.request.body.password, resetPasswordToken);
 
     ctx.body = {data: {message: 'Ok, Try to signin'}};
 };

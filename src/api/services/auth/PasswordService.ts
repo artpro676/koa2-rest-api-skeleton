@@ -3,9 +3,11 @@
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
 import * as Bluebird from 'bluebird';
-import config from '../../config/app';
+import config from '../../../config/app';
+import logger from '../../../config/logger';
 import AppError from '../AppError';
 import * as Ajv from 'ajv';
+import * as _ from 'lodash';
 import NotificationService from '../NotificationService';
 import models from '../../../models';
 
@@ -68,11 +70,9 @@ const requestResetPassword = async function (email) {
 /**
  * post /setPassword
  */
-const resetPassword = async function (password) {
+const resetPassword = async function (password, resetPasswordToken) {
 
     if (_.isEmpty(password)) {throw new AppError(400, 'Password is required.')}
-
-    const resetPasswordToken = Utils.getAuthorizationToken(ctx);
 
     if (_.isEmpty(resetPasswordToken)) {throw new AppError(400, 'Refresh token is required.')}
 

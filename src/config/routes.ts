@@ -2,7 +2,7 @@
 
 import * as Router from 'koa-router';
 import authenticate from '../api/middlewares/authenticate';
-import {roles} from '../api/services/RoleService';
+import {roles} from '../api/services/auth/PermissionService';
 import ActionHookService from '../api/services/ActionHookService';
 
 import omitFields from '../api/middlewares/omitFields';

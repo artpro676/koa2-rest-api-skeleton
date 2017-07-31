@@ -1,7 +1,7 @@
 'use strict';
 
-import config from '../../config/app';
-import models from '../../models';
+import config from '../../../config/app';
+import models from '../../../models';
 import * as _ from 'lodash';
 import AppError from '../AppError';
 import * as jwt from 'jsonwebtoken';
@@ -92,13 +92,13 @@ const refreshAuthToken = async function (refreshToken) {
 
     if (token.user.isDisabled()) throw new AppError(403, 'Account is currently disabled, please contact customer support.');
 
-    const authToken = AuthService.signToken({
+    const authToken = signJwtToken({
         id: token.user.id,
         email: token.user.email,
         authType: token.authType
     });
 
-    const newRefreshToken = await TokenService.createRefreshToken(token.user, token.authType);
+    const newRefreshToken = await createRefreshToken(token.user, token.authType);
 
     await token.destroy();
 

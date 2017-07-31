@@ -4,14 +4,10 @@ module.exports = {
     up: async function(queryInterface, Sequelize) {
 
         await queryInterface.createTable('email_black_list', {
-            id: {
-                allowNull: false,
-                autoIncrement: true,
-                primaryKey: true,
-                type: Sequelize.INTEGER
-            },
             email: {
                 type: Sequelize.STRING,
+                primaryKey: true,
+                allowNull: false,
             },
             reasonType: {
                 type: Sequelize.STRING
@@ -24,7 +20,7 @@ module.exports = {
             }
         });
 
-        return queryInterface.addIndex('email_blacklist', ['email'], {
+        return queryInterface.addIndex('email_black_list', ['email'], {
             indexName: 'email_blacklist_email_unique_index',
             indicesType: 'UNIQUE'
         });
