@@ -11,45 +11,13 @@ import Utils from './Utils';
 import AppError from "./AppError";
 
 /**
- * Sending email notification to user
- * that someone followed this user
- * or made follow request
- * @param ctx
- * @param mailTemplate
- */
-const sendEmailTemplateUserFollow = async function (ctx, mailTemplate) {
-    const notificationDisableToken = await TokenService.createNotificationDisableToken(ctx.state.user);
-    await EmailService.sendTemplate(mailTemplate, [ctx.state.user.email], {
-        name: ctx.state.user.firstName || ctx.state.user.username,
-        followerName: ctx.state.account.firstName || ctx.state.account.username,
-        link: Utils.getNotificationDisableLink(notificationDisableToken)
-    });
-};
-
-/**
- * Sending email notification to user
- * that someone followed this user beam
- * @param ctx
- * @param beamOwner
- */
-const sendEmailTemplateBeamFollow = async function (ctx, beamOwner) {
-    const notificationDisableToken = await TokenService.createNotificationDisableToken(beamOwner);
-    await EmailService.sendTemplate('followed_beam', [beamOwner.email], {
-        name: beamOwner.firstName || beamOwner.username,
-        followerName: ctx.state.account.firstName || ctx.state.account.username,
-        beamDescription: ctx.state.beam.title || ctx.state.beam.description,
-        link: Utils.getNotificationDisableLink(notificationDisableToken)
-    });
-};
-
-/**
  * Sending email for resetting user password
  * @param user
  */
 const sendResetPasswordEmail = async function (user) {
     const resetPasswordToken = await TokenService.createResetPasswordToken(user);
     await EmailService.sendTemplate('reset', [user.email], {
-        name: user.fullname || 'user',
+        title: `Hi, ${user.fullname || 'user'}`,
         link: Utils.getResetLink(resetPasswordToken)
     });
 };
@@ -58,10 +26,10 @@ const sendResetPasswordEmail = async function (user) {
  * Sending email for confirmation user email
  * @param created
  */
-const sendConfirmationEmail = async function (created) {
-    const confirmToken = await TokenService.createConfirmationToken(created);
-    await EmailService.sendTemplate('confirmation', [created.email], {
-        name: created.fullname || 'user',
+const sendConfirmationEmail = async function (user) {
+    const confirmToken = await TokenService.createConfirmationToken(user);
+    await EmailService.sendTemplate('confirmation', [user.email], {
+        title: `Hi, ${user.fullname || 'user'}`,
         link: Utils.getConfirmLink(confirmToken)
     });
 };
@@ -123,8 +91,6 @@ const sendPushNotificationsToAll = async function (message) {
 
 export default {
     sendConfirmationEmail,
-    sendEmailTemplateUserFollow,
-    sendEmailTemplateBeamFollow,
     sendResetPasswordEmail,
     sendPushNotifications,
     sendPushNotificationsToUsers,

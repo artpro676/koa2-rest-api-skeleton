@@ -20,7 +20,6 @@ import BulkRemove from "../api/actions/BulkRemove";
 
 import AccountController from '../api/controllers/v1/AccountController';
 import AuthController from '../api/controllers/v1/AuthController';
-import UserController from '../api/controllers/v1/UserController';
 import AWSWebhookController from '../api/controllers/v1/AWSWebhookController';
 
 let router = new Router({
@@ -64,7 +63,6 @@ router
     .put('/v1/user/:id', checkPermissions(roles.ADMIN), omitFields(['id']), Update('User'))
     .delete('/v1/user/:id', checkPermissions(roles.ADMIN), Remove('User'))
     .post('/v1/user/bulk/remove', checkPermissions(roles.ADMIN), BulkRemove('User'))
-    .put('/v1/user/bulk/status', checkPermissions(roles.ADMIN), UserController.setStatus)
 ;
 
 

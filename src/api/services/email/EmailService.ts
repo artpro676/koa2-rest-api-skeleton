@@ -15,62 +15,34 @@ const stage = getAppStageForDisplay();
 
 
 const templatesMeta = {
-    'reset': {
-        file: 'reset',
-        subject: `${config.name} ${stage} Password reset`
-    },
     'alert': {
         file: 'alert',
         subject: `${config.name} ${stage} Alert`
     },
-    'user_block': {
-        file: 'alert',
-        subject: `${config.name} ${stage} Blocked user`
-    },
-    'beam_block': {
-        file: 'alert',
-        subject: `${config.name} ${stage} Blocked beam`
-    },
-    'post_block': {
-        file: 'alert',
-        subject: `${config.name} ${stage} Blocked post`
-    },
-    'confirmation': {
+    'signup_confirmation': {
         file: 'confirmation',
-        subject: `${config.name} ${stage} Confirm signup`
+        subject: `${config.name} ${stage} Confirm signup`,
+        data: {
+            title: 'Hi,',
+            message: 'Please confirm activation of your account',
+            secondMessage: 'If you did not signup, please ignore this email.',
+            buttonText: 'Confirm account',
+            buttonAfter: ''
+        }
     },
-    'follow_request': {
-        file: 'follow_request',
-        subject: `${config.name} ${stage} Following request`
+    'reset': {
+        file: 'confirmation',
+        subject: `${config.name} ${stage} Password reset`,
+        data: {
+            title: 'Hi,',
+            message: 'A request has been made to reset the password for the BEAM Authentic account with this email address.',
+            secondMessage: 'If you did not request this, you can ignore this message.',
+            buttonText: 'Click here',
+            buttonAfter: 'to reset your password.',
+        }
+
     },
-    'followed': {
-        file: 'followed',
-        subject: `${config.name} ${stage} You have new followers`
-    },
-    'followed_beam': {
-        file: 'followed_beam',
-        subject: `${config.name} ${stage} You have new beam followers`
-    },
-    'feedback': {
-        file: 'feedback',
-        subject: `${config.name} ${stage} Feedback from user`
-    },
-    'notification_disable': {
-        file: 'notification_disable',
-        subject: `${config.name} ${stage} Disable notifications`
-    },
-    'partner_request': {
-        file: 'partner_request',
-        subject: `${config.name} ${stage} Partner request`
-    },
-    'publisher_request_result': {
-        file: 'publisher_request_result',
-        subject: `${config.name} ${stage} Partner request is processed`
-    },
-    'subscription_request': {
-        file: 'subscription_request',
-        subject: `${config.name} ${stage} Subscription request`
-    },
+
 };
 
 function getAppStageForDisplay() {
@@ -127,7 +99,7 @@ const sendTemplate = async function (templateName, to, data) {
 
     let meta = getMeta(templateName);
 
-    const message:any = await renderTemplate(meta.file, data);
+    const message:any = await renderTemplate(meta.file, _.defaults(data, _.get(meta, 'data', {})));
 
     let result:any={};
     try {
